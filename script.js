@@ -8,9 +8,8 @@ let catcherIMG, fallingObject1, fallingObject2;
 /* PRELOAD LOADS FILES */
 function preload() {
   catcherIMG = loadImage("assets/catch.jpg")
-  rubber = loadImage("assets/rubberduck.jpg");
-  bug = loadImage("assets/bug.jpg");
-
+  rubber = loadImage("assets/download(1).jpg");
+  bug = loadImage("assets/download.jpg");
 }
 
 /* SETUP RUNS ONCE; establishes the components */
@@ -21,8 +20,8 @@ function setup() {
   //Resize assets
 
   catcherIMG.resize(75,0);
-  rubber.resize(50,0);
-  bug.resize(50,0);
+  rubber.resize(100,0);
+  bug.resize(100,0);
 
   //Create catcher 
   catcher = new Sprite(catcherIMG, 200, 375, "k"); // (x,y,w,h) -> box; added kinematic so the catcher is not affected by the object but can be still programmed by the keyboard
