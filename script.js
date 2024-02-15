@@ -1,15 +1,19 @@
 //Move the catcher with the left and right arrow keys to catch the falling objects. 
 
 /* VARIABLES */
-let catcher, rubber, bug;
+let catcher, rubber, bug, bug2, bg;
 let score = 1;
-let catcherIMG, fallingObject1, fallingObject2;
+let catcherIMG, fallingObject1, fallingObject2, fallingObject3;
 
 /* PRELOAD LOADS FILES */
 function preload() {
-  catcherIMG = loadImage("assets/catch.jpg")
+  catcherIMG = loadImage("assets/catch.png")
   rubber = loadImage("assets/duck.png");
   bug = loadImage("assets/bug.png");
+  bug2 = loadImage("assets/bug2.png");
+  bg = loadImage("assets/backgroundgif.gif");
+  win = loadImage("assets/win.jpg");
+  lose = loadImage("assets/lose.webp");
 }
 
 /* SETUP RUNS ONCE; establishes the components */
@@ -19,9 +23,13 @@ function setup() {
   
   //Resize assets
 
+  bg.resize(600,400); // (width,height)
+  win.resize(400,400);
+  lose.resize(400, 400);
   catcherIMG.resize(75,0);
   rubber.resize(50,0);
   bug.resize(50,0);
+  bug2.resize(50,0);
 
   //Create catcher 
   catcher = new Sprite(catcherIMG, 200, 375, "k"); // (x,y,w,h) -> box; added kinematic so the catcher is not affected by the object but can be still programmed by the keyboard
@@ -34,11 +42,17 @@ function setup() {
   fallingObject2 = new Sprite(bug, 100, 0);
   fallingObject2.vel.y = 3;
   fallingObject2.rotationLock = true;
+  
+  fallingObject3 = new Sprite(bug2, 100, 0);
+  fallingObject3.vel.y = 3;
+  fallingObject3.rotationLock = true;
 }
 
 /* DRAW LOOP REPEATS */
 function draw() {
-  background("#FFFFFF");
+
+  background(bg);
+
 
   // Draw directions to screen
 
@@ -55,13 +69,19 @@ function draw() {
   if (fallingObject1.y >= height) {
     fallingObject1.y = 0;
     fallingObject1.x = random(width); // to make the ball fall randomly
-    fallingObject1.vel.y = random(5, 6); // random speeds 
+    fallingObject1.vel.y = random(4, 6); // random speeds 
   }
 
   if (fallingObject2.y >= height) {
     fallingObject2.y = 0;
     fallingObject2.x = random (width);
     fallingObject2.vel.y = random (5,7);
+  }
+
+  if (fallingObject3.y >= height) {
+    fallingObject3.y = 0;
+    fallingObject3.x = random (width);
+    fallingObject3.vel.y = random (5,7);
   }
 
   // Move catcher
@@ -91,38 +111,37 @@ function draw() {
       restart();
     }
 
+    if (fallingObject3.collides(catcher)) {
+      score = score - 1; 
+      restart();
+    }
+
     // medium
     if (score < 0) {
       background(224, 224, 224);
+      image(lose, 0, 0)
 
-      // eliminate the components
-      catcher.pos = { x: -300, y: -300 };
-      fallingObject1.pos = { x: -100, y: -100 };
-      fallingObject1.vel = 0;
-      fallingObject2.pos = { x: -100, y: -100};
-      fallingObject2.vel = 0;
-    
-      text("You lose!", 160, height / 2);
-      text("There were too many bugs!", 105, height / 2 - 20);
-      textSize(30);
+      eliminate();
+
+      fill('white');
+      textFont('Courier New', 15);
+      text("You lose!", 160, 50);
+      text("There were too many bugs!", 95, 70);
     }
 
     if (score >= 10) {
-      background(224, 224, 224);
-
-      // eliminate the components
-      catcher.pos = { x: -300, y: -300 };
-      fallingObject1.pos = { x: -100, y: -100 };
-      fallingObject1.vel = 0;
-      fallingObject2.pos = { x: -100, y: -100};
-      fallingObject2.vel = 0;
+      background(225,225, 225);
+      image(win, 0, 0);
       
-      
-      text("You win!", 160, height / 2);
-      text("Your code runs!", 130, height / 2 - 20);
-      textSize(30);
+      eliminate();
 
-      if (mouseIsPressed) {
+      fill('white');
+      textFont('Courier New', 15);
+      text("You win!", 160, 50);
+      text("Your code runs!", 130, 70);
+      //textSize(40);
+
+    if (mouseIsPressed) {
         score = 0;
         catcher.pos = { x: 200, y: 380 };
         restart();
@@ -130,14 +149,37 @@ function draw() {
     }
   }
 
-//doesn't work
   function restart() {
     fallingObject1.y = 0;
     fallingObject1.x = random (width);
     fallingObject1.vel.y = random(5, 6);
+    
     fallingObject2.y = 0;
     fallingObject2.x = random (width);
     fallingObject2.vel.y = random (5,7);
+    
+    fallingObject3.y = 0;
+    fallingObject3.x = random (width);
+    fallingObject3.vel.y = random (5,7);
+    
     fallingObject1.direction = "down";
     fallingObject2.direction = "down";
+    fallingObject3.direction = "down";
+    
+
   }
+
+  function eliminate() {
+    catcher.pos = { x: -300, y: -300 };
+
+    fallingObject1.pos = { x: -100, y: -100 };
+    fallingObject1.vel = 0;
+
+    fallingObject2.pos = { x: -100, y: -100};
+    fallingObject2.vel = 0;
+
+    fallingObject3.pos = { x: -100, y: -100 };
+
+    fallingObject3.vel = 0;
+  }
+
